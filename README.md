@@ -25,6 +25,15 @@ The [Progress Report](https://blam.info/progress/) details what functionality ha
 
 Build
 -----
+
+Before configuring, run the non-destructive host feasibility check:
+```bash
+python3 tools/check_host.py
+```
+It verifies that CMake, Clang, `lld-link`, the Python packages, and Clang's
+`i386-pc-win32` compile/link target are available. Use `--json` for a
+machine-readable report. This probe does not require or inspect game files.
+
 This project can be built with Visual Studio or Clang, on Windows, macOS, and Linux. Project tooling is developed with [Python 3](https://www.python.org/), so that will need to be installed, along with dependencies listed in requirements.txt. CMake will also need to be installed.
 
 Build overview:
