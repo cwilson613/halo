@@ -192,6 +192,55 @@ Do not bulk-import names, structs, or source into this repository.
 
 Confidence: **high** that the corpus is a rich comparative artifact; **low by default** for any unverified original-Xbox claim derived from it.
 
+### Operator-supplied Defiance and Jojo discussion
+
+On 2026-08-16, the operator supplied a Discord transcript containing messages dated from 2026-07-09 through 2026-08-15. This repository does not currently have a Vox Discord connection or an independently queryable export, so the transcript is preserved as **operator-supplied testimonial evidence**, not independently authenticated Discord history. Exact message URLs, channel/server identity, Discord user IDs, attachment hashes, and an immutable export were not supplied.
+
+The transcript supports the following attribution when read with the operator's identification of the opening speaker as Jojo:
+
+- **Defiance** owns or leads the HCEA Blam re-sourcing corpus, performs disassembly-to-C attestation, refines symbols/types/constants, and publishes `surreptitiousresearch/halocea`.
+- **Jojo** reports running a compiled Blam core derived from that work against **ReXGlue's “accurate core”**, comparing memory after each deterministic Halo tick, using Codex to localize divergences, and returning proposed bug fixes to Defiance.
+- **ReXGlue** supplies the comparison core or execution mechanism. The transcript does not establish its implementation, provenance, or validation level beyond Jojo's description.
+
+The most relevant supplied statements are paraphrased rather than reproduced wholesale:
+
+- Jojo reports per-tick memory diffing between the compiled Blam core and ReXGlue's accurate core; because Halo is deterministic, divergences appear quickly.
+- Jojo says Codex is finding many bugs and that fixes will be provided to Defiance.
+- Jojo describes aiming for a near-perfect disassembly in the re-sourcing project and plans another particle-system attestation because of complex floating-point behavior.
+- Defiance separately reports disassembly/code attestation finding subtle `int`-versus-`float` defects that would affect AI looking behavior.
+- Defiance reports an adjudication ledger of 50 real defects, 6 portability hardenings, 12 faithful-as-built or refuted findings, and 4 rejected proposals. This is a self-reported snapshot, not yet tied here to immutable commits or machine-readable reports.
+
+A cautious reconstruction of the validation loop is:
+
+```text
+shared initial state and inputs
+    ├── compiled reconstructed Blam core
+    └── ReXGlue accurate/reference core
+              ↓
+       execute one Halo tick
+              ↓
+      compare selected memory/state
+              ↓
+       localize first divergence
+              ↓
+       investigate and adjudicate
+              ↓
+        return accepted fixes
+```
+
+The transcript directly supports deterministic per-tick comparison and a feedback loop; it does **not** establish whether all process memory or normalized regions are compared, how pointers/padding/allocators and nondeterministic state are handled, whether ReXGlue executes original machine code or another representation, or how candidate fixes are reviewed before acceptance. Those details require runner source, protocol documentation, or targeted Discord retrieval.
+
+This adds a useful two-layer validation model:
+
+1. **Static attestation:** compare reconstructed C, types, casts, constants, and floating-point expressions with disassembly.
+2. **Differential execution:** compare runtime state at deterministic tick boundaries and investigate the earliest meaningful divergence.
+
+For this project, HaloCEA remains comparative evidence rather than original-Xbox authority. Candidate findings should record engine/build lineage, exact source symbol and address, comparison-core identity, compared state regions, first divergent tick, normalization rules, tool/model involvement, human adjudication, and the regression fixture that proves the accepted correction. The modern Bevy architecture is unchanged, but its fixed-step traces and explicit state projections are consistent with this validation strategy.
+
+A future **Vox Discord integration** should be used for targeted searches and provenance completion: resolve stable message links, authors and user IDs, surrounding thread context, attachments, edits, dates/time zones, and later corrections. Until then, do not infer additional speaker identity or runner mechanics beyond this supplied transcript.
+
+Confidence: **high** for what the supplied text literally reports; **medium** for speaker attribution because the opening header is absent from the pasted excerpt and supplied separately by the operator; **unknown** for ReXGlue internals and the correctness/completeness of reported fixes.
+
 ## 6. `blam_tinyccompiler_src.zip`
 
 Local input:

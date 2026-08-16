@@ -29,6 +29,8 @@ Discord context mentioned experiments around MCC's `halo1.dll`, the HaloX projec
 
 Discord context described this as an in-progress HCEA decompilation/reconstruction effort and shared a local archive named `blam_tinyccompiler_src.zip`. The archive's recorded SHA-256 is `25a1bf1380a0026212c537729ad5db290e4292a45a179bcd39fffa51185407bc`; provenance and licensing remain unresolved.
 
+A later operator-supplied transcript attributes the HaloCEA re-sourcing and static attestation work to Defiance and a deterministic, per-Halo-tick differential run against ReXGlue's “accurate core” to Jojo. This is testimonial evidence pending stable Discord message links or an immutable export. See the assessment's “Operator-supplied Defiance and Jojo discussion” section for supported claims and limits. Targeted Discord provenance searches are deferred until a Vox Discord integration is available.
+
 ## Reclaimers Library
 
 - https://c20.reclaimers.net/
