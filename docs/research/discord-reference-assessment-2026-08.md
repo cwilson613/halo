@@ -289,6 +289,14 @@ The Discord filename likely means “Blam source intended for a TinyCC experimen
 
 Confidence: **high** for archive composition; **medium** for relationship to HaloCEA; **unknown** for authorship/license/correctness.
 
+### Later clean HCAA SDL host package
+
+A later operator-supplied archive, `BLAM_EXTRACTED_HCAA-clean.zip`, materially changes the compilation assessment. Unlike the earlier function corpus, it declares HaloCEA revision `aa635a70b2c3285ade3f53c2f3f94de759ce7cd4`, includes 1,753 headers, a curated recovered-source tree, host/platform boundaries, TinyCC and SDL 1.2, `build.ps1`, launchers, and a headless verifier. This supplies the build composition that the earlier Jojo attempt lacked; it should be qualified as its own versioned package rather than merged into the earlier ZIP.
+
+The complete archive identity, unresolved licensing boundary, reported runtime capability, macOS/Apple-Silicon constraint, isolated trial procedure, and project-use decision are in [`hcaa-sdl-host-assessment-2026-08.md`](hcaa-sdl-host-assessment-2026-08.md). Its supplied 32-bit Windows build is not a native macOS executable; an x86-capable isolated Windows environment is the recommended first Apple Silicon trial.
+
+Confidence: **high** that the package resolves the earlier structural build blockers; **unknown** for successful execution until the supplied headless verifier passes with the matching external prototype data.
+
 ## 7. c20 Reclaimers Library
 
 References:

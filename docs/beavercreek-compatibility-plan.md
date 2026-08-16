@@ -184,7 +184,9 @@ Gate D acceptance:
 
 ### Lane E — Reconstruction evidence promotion
 
-Incoming C files and headers are indexed by source module, symbol/address, target build, provenance, and verification state. Prioritize modules that constrain the playtest:
+Incoming C files and headers are indexed by source module, symbol/address, target build, provenance, and verification state. The operator-supplied clean HCAA SDL host package is an optional local differential oracle and lifecycle probe; its pinned identity, unresolved rights boundary, and isolated qualification procedure are recorded in [`research/hcaa-sdl-host-assessment-2026-08.md`](research/hcaa-sdl-host-assessment-2026-08.md). It is not linked into or copied into the native runtime.
+
+Prioritize modules that constrain the playtest:
 
 1. scenario/cache/tag loading and disposal;
 2. structures/BSP initialization;
