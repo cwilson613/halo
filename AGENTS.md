@@ -23,6 +23,7 @@ Read before modern-runtime work:
 - Public tests and samples use project-authored or clearly redistributable fixtures.
 - Do not present interoperability as permission to redistribute content.
 - Ringhopper is GPL-3.0-only. Direct linking belongs in separately distributed GPL-compatible tooling, not silently in a permissively licensed modern core.
+- Invader is GPL-3.0-only and remains a pinned external legacy build/transformation process; do not link or copy it into the permissive Bevy core.
 - `omegon-ringhopper/` is an independent ignored Git checkout, not a submodule and not part of this repository's commits.
 
 ## Existing reconstruction track

@@ -256,7 +256,8 @@ Demonstrate explicit, lawful, provenance-aware import from operator-supplied Hal
 ### Deliverables
 
 - completed independent `omegon-ringhopper` read-only integration;
-- documented process/file contract between GPL tooling and permissive project components, subject to license review;
+- one pinned Invader Tutorial build/differential experiment, kept as an optional external GPL process rather than a linked dependency;
+- documented process/file contracts between GPL tooling and permissive project components, subject to license review;
 - one bounded import adapter for selected metadata or one asset class;
 - normalized output with source hashes, tool revisions, and diagnostics;
 - differential fixture comparing Ringhopper observations with project parsing/IR;

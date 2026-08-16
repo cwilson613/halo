@@ -411,6 +411,12 @@ Expected uses:
 
 Ringhopper is not a runtime dependency and is not silently invoked by ordinary builds.
 
+### Invader
+
+[Invader](https://github.com/SnowyMouse/invader) is a GPL-3.0-only legacy content toolchain with broad tag, cache-build, extraction, comparison, script, bitmap, sound, model, resource-map, editing, and repair capabilities. It complements rather than replaces Ringhopper: Ringhopper remains the typed read-only inspection service, while pinned Invader executables may support explicit operator-invoked build and transformation experiments.
+
+Invader is not linked into the permissive modern core, does not define canonical documents, and is not invoked by ordinary editor/runtime builds. Any automation uses a narrow process contract with pinned revision/hash, constrained roots, staged outputs, timeouts, captured diagnostics, and provenance. See the [Invader assessment](../research/invader-assessment-2026-08.md).
+
 ### Original content
 
 No original executables or proprietary game assets enter version control. Tests use project-authored, redistributable fixtures unless an operator explicitly supplies local content. Local-only inputs and outputs remain ignored and provenance-recorded.

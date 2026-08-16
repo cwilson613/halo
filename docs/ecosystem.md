@@ -139,10 +139,12 @@ flowchart TB
     HaloX[HaloX / MCC experiments] --> Future[MCC interoperability backlog]
     Spawns[Halospawns<br/>map/replay analytics] --> Future
     Ring[Ringhopper<br/>typed map and tag inspection] --> Adapter[Optional read-only adapter]
+    Invader[Invader<br/>legacy build and transformation] --> Legacy[Optional build/reference workflow]
 
     Questions --> Verify[Project-owned verification]
     Verify --> Decisions[Compatibility decisions]
     Adapter --> Decisions
+    Legacy --> Decisions
 ```
 
 External projects are not a universal dependency graph. They occupy bounded roles:
@@ -152,7 +154,8 @@ External projects are not a universal dependency graph. They occupy bounded role
 - **HaloCEA/corpora:** version-labeled hypotheses requiring independent verification;
 - **HaloX:** future MCC module-hosting research;
 - **Halospawns:** map catalog, replay, heatmap, region, and analytics concepts;
-- **Ringhopper:** explicit structured inspection at a separate GPL process/repository boundary.
+- **Ringhopper:** explicit structured inspection at a separate GPL process/repository boundary;
+- **Invader:** optional pinned legacy tag/cache build, extraction, comparison, and transformation reference, also behind a GPL process boundary. See the [dated assessment](research/invader-assessment-2026-08.md).
 
 ## Halospawns relevance
 
