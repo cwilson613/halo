@@ -100,3 +100,14 @@ The process of adding re-implemented functions is mostly automated and relativel
 * Naturally, your new code will call some function in the original binary that has not yet been re-implemented. These functions will also be automatically linked correctly, provided the definitions of data and called functions are in `kb.json`.
 
 See the [Progress Report](https://blam.info/progress/) to interactively explore the call graph, familiarize yourself with the code base, and examine the project frontier.
+
+Modern Runtime and Tooling
+--------------------------
+
+A parallel Rust/Bevy track is planned for a modern runtime, deterministic content pipeline, and artist-facing scenario tools. It complements rather than replaces the C/XBE reconstruction described above.
+
+- [Architecture](docs/architecture/modern-runtime-toolchain.md)
+- [Phased roadmap](docs/modern-runtime-roadmap.md)
+- [Bevy ecosystem evidence survey](docs/research/bevy-ecosystem-2026-08.md)
+
+The first environment/scenario compatibility target is the tutorial level distributed with the Halo Editing Kit. Original HEK files remain operator-supplied local inputs; public tests use a separately authored redistributable analogue.
