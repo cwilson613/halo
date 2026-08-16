@@ -1,10 +1,9 @@
 ---
 id: modern-runtime-foundation
 title: "Phase 0 — Modern runtime foundation spike"
-status: exploring
+status: implemented
 tags: [modern-runtime, phase-0, bevy, spike, foundation]
-open_questions:
-  - "Do Bevy 0.19 native transform gizmos and a minimal inspector provide sufficient Phase 0 selection/edit evidence without coupling domain commands to UI types?"
+open_questions: []
 dependencies: []
 related:
   - native-scenario-editor
@@ -45,8 +44,14 @@ On 2026-08-16, the host exposed rustc 1.97.1 and cargo 1.97.0. `/dev/dri/renderD
 
 **Rationale:** This is the smallest vertical slice that can verify a Bevy-independent canonical document, domain-command editing, fixed-step simulation, and runtime projection without creating speculative empty crates.
 
-## Open Questions
+### Accept the Phase 0 editor interaction evidence
 
-- Can Bevy 0.19.1 create a window and render the project-authored PBR fixture on this Linux graphics stack, and what exact native dependencies/features are required?
-- Which canonical textual document format best satisfies deterministic formatting, readable diffs, diagnostics, and versioned migration for a realistic scenario fixture?
-- Do Bevy 0.19 native transform gizmos and a minimal inspector provide sufficient Phase 0 selection/edit evidence without coupling domain commands to UI types?
+**Status:** accepted
+
+**Rationale:** The Bevy application selects the project-authored fixture, presents object identity and transform state, visualizes transform axes, and routes movement through `DomainCommand::MoveObject`. Tests prove that the authored document and ECS projection remain synchronized without exposing Bevy or UI types through `halo-domain`. A production drag gizmo and specialized inspector remain Phase 1 UX work rather than Phase 0 blockers.
+
+## Resolution
+
+Phase 0 is implemented. The Linux Wayland/Vulkan renderer launch, deterministic canonical document tests, fixed-step headless trace, command-driven editor interaction, projection tests, and recorded build/startup evidence satisfy the foundation gate. Apple Silicon runtime qualification remains a platform task and does not reopen this Linux foundation decision.
+
+The next authorized vertical slice is Gate A in [`beavercreek-compatibility-plan.md`](beavercreek-compatibility-plan.md): the minimum native scenario transaction, save/reload, validation, and isolated play-session substrate.

@@ -142,7 +142,9 @@ The same authored room must contain:
 
 Deliver a small first-person combat sandbox that exercises the compatibility architecture end to end.
 
-### Primary reference target: HEK Tutorial
+The staged execution plan is defined in [`beavercreek-compatibility-plan.md`](beavercreek-compatibility-plan.md): use HEK Tutorial to calibrate the common observation/import/compiler contracts, then use Beavercreek as the first recognizable environment load and fixed-step movement playtest. This bounded read-only compatibility probe is pulled forward from the broader Phase 5 interoperability milestone because Phase 3 cannot be evidenced without it; the general legacy-interoperability surface remains Phase 5 work.
+
+### Primary calibration target: HEK Tutorial
 
 Use the `tutorial` level distributed with the original Gearbox Halo Editing Kit as the first environment/map/scenario compatibility target. Public references identify its source scenario as `tags\levels\test\tutorial\tutorial.scenario`; an operator may also compile or supply `tutorial.map` for cache-level comparison.
 
@@ -351,15 +353,19 @@ Pin versions, review licenses and maintenance, minimize Bevy feature sets, run u
 
 Establish representative scenes early. Track compile time, startup, editor latency, import/rebuild latency, simulation time, render frame time, memory, and artifact size.
 
-## First backlog after documentation approval
+## First backlog after Phase 0 closure
 
-1. Create a design record for the Bevy foundation spike.
-2. Establish `modern/` with one application and one domain library only.
-3. Add project-authored cube/room fixture and provenance.
-4. Implement fixed-step trace test.
-5. Exercise transform gizmo and editor camera.
-6. Compare canonical document serialization with realistic diffs and migration.
-7. Prototype a UI shell without placing domain mutations in UI systems.
-8. Record build/startup measurements and decide whether Phase 0 exits.
+Phase 0 is implemented. Execution now follows the gates in [`beavercreek-compatibility-plan.md`](beavercreek-compatibility-plan.md):
 
-Everything beyond this list remains planned, not implicitly authorized implementation.
+1. Implement the minimum native scenario model: typed asset/player-start references and an explicit project coordinate convention.
+2. Add validation diagnostics, command transactions, snapshot-backed undo/redo, and deterministic save/reload.
+3. Add an isolated, headless-testable play snapshot that cannot mutate authoring state.
+4. Specify the strict, bounded observation inventory using only synthetic/project-authored fixtures.
+5. Add one pinned external read-only inspector process contract with provenance, root containment, output bounds, and timeouts.
+6. Inventory operator-supplied Tutorial content and calibrate coordinates, BSP geometry/materials, collision, and player starts.
+7. Prove deterministic Tutorial compilation and the equivalent public analogue paths.
+8. Apply the common pipeline to Beavercreek without map-specific branches; load geometry, basic materials/lightmaps, collision, and a deterministic spawn.
+9. Record the fixed-step Beavercreek movement/restart playtest, coverage gaps, and performance.
+10. Continuously promote incoming reconstructed C/header evidence through focused lifecycle, spawn, movement, collision, camera, and material fixtures.
+
+Later gameplay, broad interoperability, and production editor work remain planned, not implicitly authorized by this backlog.

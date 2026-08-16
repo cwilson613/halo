@@ -28,7 +28,7 @@ The modern runtime is not source-compatible with the original executable. It aim
 
 When Bevy defaults differ from observed Halo behavior, project-owned compatibility systems win.
 
-The first legacy environment reference is the Tutorial level distributed with the original Gearbox Halo Editing Kit. Operator-supplied `tutorial.scenario` source content and any compiled `tutorial.map` provide complementary authoring and cache evidence; public tests use a separately authored redistributable analogue.
+The first legacy environment calibration reference is the Tutorial level from the original Gearbox Halo Editing Kit. Operator-supplied `tutorial.scenario` source content and any compiled `tutorial.map` provide complementary authoring and cache evidence; public tests use a separately authored redistributable analogue. After Tutorial proves the common observation/import/compiler contracts, operator-supplied Beavercreek content is the first recognizable environment load and fixed-step movement playtest target. The staged gates and evidence contract are defined in [`../beavercreek-compatibility-plan.md`](../beavercreek-compatibility-plan.md).
 
 ### 2. Authoring data is not the Bevy world
 
