@@ -12,3 +12,6 @@ src/typechecks.c
 *.obj
 *.exe
 *.pdb
+
+# Independent adjacent checkout; intentionally not a submodule.
+/omegon-ringhopper/
