@@ -95,10 +95,12 @@ The arrows from the reconstruction track return **evidence**, not linked impleme
 
 ## Proposed workspace topology
 
-The modern track should enter as a Rust workspace under `modern/` only after the foundation spike passes. The intended shape is:
+The modern track is tracked under `halo-bevy/` in this monorepo. Its Cargo and Nix build graph remains separate from the root C/XBE reconstruction build. The current implemented shape is intentionally smaller than the eventual topology below: one Bevy-independent domain crate and one consuming Bevy application.
+
+The eventual dependency shape is:
 
 ```text
-modern/
+halo-bevy/
 ├── Cargo.toml
 ├── crates/
 │   ├── halo-domain/          # versioned documents, IDs, references, commands

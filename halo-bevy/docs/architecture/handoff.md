@@ -1,16 +1,16 @@
 # Architecture handoff
 
-The architecture and research that authorized this repository currently live in the adjacent reconstruction checkout:
+The architecture and research that authorize this in-tree project live in the monorepo-level documentation:
 
 ```text
-/home/wilson/workspace/pig/halo/docs/ecosystem.md
-/home/wilson/workspace/pig/halo/docs/architecture/modern-runtime-toolchain.md
-/home/wilson/workspace/pig/halo/docs/modern-runtime-roadmap.md
-/home/wilson/workspace/pig/halo/docs/research/bevy-ecosystem-2026-08.md
-/home/wilson/workspace/pig/halo/docs/research/discord-reference-assessment-2026-08.md
+../../docs/ecosystem.md
+../../docs/architecture/modern-runtime-toolchain.md
+../../docs/modern-runtime-roadmap.md
+../../docs/research/bevy-ecosystem-2026-08.md
+../../docs/research/discord-reference-assessment-2026-08.md
 ```
 
-Those paths are provenance references, not build dependencies. Before this repository is moved or published, copy the stable architecture decisions needed here while preserving links to upstream evidence and commit identities.
+These are evidence and architecture inputs, not Cargo or Nix build dependencies. Preserve links to evidence and commit identities when promoting decisions into this project.
 
 Initial upstream planning commit:
 

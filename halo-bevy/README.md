@@ -2,7 +2,7 @@
 
 A clean-room, project-owned Halo-inspired game and content toolchain built with Rust and Bevy.
 
-This repository is independent from the original-Xbox reconstruction repository. The reconstruction produces evidence; it is not a source dependency. Original Halo executables, maps, tags, textures, sounds, and other proprietary content are not part of this repository.
+The modern game is tracked at `halo-bevy/` inside the overarching Halo monorepo. It remains architecturally isolated from the original-Xbox reconstruction build: reconstruction produces evidence and compatibility fixtures, not a source or link dependency. Original Halo executables, maps, tags, textures, sounds, and other proprietary content are not part of the tracked project.
 
 ## Platform baseline
 

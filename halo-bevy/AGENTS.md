@@ -6,7 +6,8 @@ Build a clean-room Halo-inspired game, runtime, and artist-facing content toolch
 
 ## Boundaries
 
-- This is an independent Git repository, not a submodule of the original-Xbox reconstruction.
+- This project is tracked under `halo-bevy/` in the overarching Halo monorepo; it is not a submodule and must not contain a nested `.git` directory.
+- The Rust/Nix build remains architecturally separate from the root C/XBE reconstruction build. Evidence and fixtures cross that boundary; source and linked dependencies do not.
 - Never commit Halo executables, maps, tags, textures, sounds, HEK packages, or unclear-rights derivatives.
 - Large and restricted resources belong under `HALO_RESOURCE_ROOT` (default `$HOME/.local/share/halo-re`).
 - Public tests and examples use project-authored redistributable fixtures.

@@ -25,6 +25,7 @@ The [Progress Report](https://blam.info/progress/) details what functionality ha
 
 Modern runtime and tooling plans:
 
+- [Bevy game and toolchain](halo-bevy/README.md)
 - [Ecosystem diagrams](docs/ecosystem.md)
 - [Invader ecosystem assessment](docs/research/invader-assessment-2026-08.md)
 - [Modern runtime architecture](docs/architecture/modern-runtime-toolchain.md)

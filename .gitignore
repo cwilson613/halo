@@ -13,6 +13,5 @@ src/typechecks.c
 *.exe
 *.pdb
 
-# Independent adjacent checkouts; intentionally not submodules.
+# Independent adjacent checkout; intentionally not a submodule.
 /omegon-ringhopper/
-/halo-bevy/

@@ -11,6 +11,7 @@ The modern track does not supersede the reconstruction track. Reconstruction evi
 
 Read before modern-runtime work:
 
+- `halo-bevy/AGENTS.md`
 - `docs/architecture/modern-runtime-toolchain.md`
 - `docs/modern-runtime-roadmap.md`
 - `docs/research/bevy-ecosystem-2026-08.md`
@@ -22,6 +23,7 @@ Read before modern-runtime work:
 - Record source URL/identity, acquisition time, hashes, license evidence, and tool revision for imported resources.
 - Public tests and samples use project-authored or clearly redistributable fixtures.
 - Do not present interoperability as permission to redistribute content.
+- `halo-bevy/` is the in-tree modern game/toolchain project and is tracked by this monorepo; it has no nested Git repository or submodule boundary.
 - Ringhopper is GPL-3.0-only. Direct linking belongs in separately distributed GPL-compatible tooling, not silently in a permissively licensed modern core.
 - Invader is GPL-3.0-only and remains a pinned external legacy build/transformation process; do not link or copy it into the permissive Bevy core.
 - `omegon-ringhopper/` is an independent ignored Git checkout, not a submodule and not part of this repository's commits.
