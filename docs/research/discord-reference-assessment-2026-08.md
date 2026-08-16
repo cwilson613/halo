@@ -83,13 +83,20 @@ Reference:
 
 - https://dev.halospawns.com/
 
-Direct observation: the origin is reachable and returned HTTP 401 without credentials. No content was inspected.
+Authenticated inspection of the shared development frontend succeeded. It is a Svelte application backed by `api.dev.halospawns.com` and a separate authentication layer. The frontend models:
 
-The raw Discord note embedded HTTP Basic credentials. They were removed before commit. Because they appeared in chat and local session history, deletion from this file is not remediation; the site owner should rotate them. A replacement, if access is authorized, belongs in a secret manager and must never be embedded in a URL, source file, shell history, or log.
+- map catalog entries, releases, variants, families, and similarity suggestions;
+- GLB/JSON map assets, thumbnails, and screenshot definitions;
+- replay-to-map matching, games, participants, players, and statistics;
+- positional heatmaps;
+- named map regions, region sets, collections, and transforms between related maps;
+- region statistics and administrative map reprocessing.
 
-Recommended project use: **none until authorized inspection**. If access is granted, assess ownership, API/export capabilities, data provenance, license, and whether it complements scenario spawn editing. Do not scrape or mirror private content by default.
+This makes it relevant as design evidence for map identity, coordinate transforms, region authoring, replay analytics, and reproducible processing jobs. It is not evidence for core gameplay or renderer behavior and should not be a runtime dependency.
 
-Confidence: **high** for access-control status; **unknown** for site content and utility.
+The website's shared HTTP Basic credential did not authorize its API; API requests returned HTTP 401 because the application uses a separate account/session system. No API payloads or map assets were downloaded.
+
+Confidence: **high** for frontend-exposed concepts; **unknown** for data quality, backend implementation, and available content because API access was not provided.
 
 ## 3. WinterSquire repositories and HaloX claim
 
@@ -293,7 +300,7 @@ OpenSauce directional/specular lightmaps and the claimed Vulkan viewer are usefu
 | Tutorial/map evidence | use Ringhopper plus c20 definitions and operator-supplied HEK artifacts | obtain unnamed Vulkan viewer for differential tests | assuming OpenSauce/HCEA semantics are stock Tutorial semantics |
 | Native domain model | include engine/build provenance and lossless unsupported fields | optional namespace for OpenSauce extensions | coupling canonical documents to old C++ structs |
 | Renderer | stock BSP/material/lightmap path first | directional lightmaps with project-authored fixture | mechanical D3D9/OpenSauce port |
-| Editor | c20/HEK workflows as task evidence | Halospawns after authorized access | credentials in project files |
+| Editor | c20/HEK workflows as task evidence | Halospawns map identity, coordinate-transform, region-authoring, and analytics concepts | coupling authoring to a private service |
 | MCC interoperability | none on immediate critical path | HaloX/libmcc process boundary spike | treating HaloX as proven Halo 1 standalone support |
 | Licensing | cite/link; independently implement verified facts | legal review of specific desired components | copying no-license or ambiguous code |
 
@@ -301,7 +308,7 @@ OpenSauce directional/specular lightmaps and the claimed Vulkan viewer are usefu
 
 1. Ask the ZIP sender for upstream URL, exact HCEA binary/build, generator, authorship, license, and intended TinyCC workflow.
 2. Ask for the unnamed Vulkan renderer repository and revision.
-3. Rotate the Halospawns credential; inspect only after explicit authorization.
+3. Obtain API or export documentation only if deeper Halospawns interoperability becomes an approved requirement; the frontend concepts are sufficient for current planning.
 4. Add an engine/build field to all future compatibility evidence records.
 5. During the Tutorial inventory, use c20 and Ringhopper as complementary references and keep OpenSauce extension support out of the first stock-rendering acceptance gate.
 6. Select a handful of high-value functions already present in this repository and compare HaloCEA/ZIP hypotheses against original-Xbox disassembly; measure accuracy before using either corpus broadly.

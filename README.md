@@ -23,6 +23,12 @@ Current State
 
 The [Progress Report](https://blam.info/progress/) details what functionality has been re-implemented.
 
+Modern runtime and tooling plans:
+
+- [Ecosystem diagrams](docs/ecosystem.md)
+- [Modern runtime architecture](docs/architecture/modern-runtime-toolchain.md)
+- [Phased delivery roadmap](docs/modern-runtime-roadmap.md)
+
 Build
 -----
 
