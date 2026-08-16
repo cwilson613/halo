@@ -1,0 +1,12 @@
+/target/
+/.omegon/
+/.idea/
+/.vscode/
+*.swp
+*.tmp
+
+# Machine-local imported or restricted content
+/assets/local/
+/assets/imported/
+/derived/
+cache/

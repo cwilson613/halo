@@ -1,0 +1,46 @@
+[workspace]
+members = [
+    "apps/halo-game",
+    "crates/halo-domain",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97"
+publish = false
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+bevy = { version = "=0.19.1", default-features = false, features = [
+    "3d_bevy_render",
+    "bevy_asset",
+    "bevy_color",
+    "bevy_gltf",
+    "bevy_gizmos",
+    "bevy_light",
+    "bevy_log",
+    "bevy_mesh",
+    "bevy_pbr",
+    "bevy_picking",
+    "bevy_scene",
+    "bevy_shader",
+    "bevy_state",
+    "bevy_window",
+    "bevy_winit",
+    "default_font",
+    "hdr",
+    "multi_threaded",
+    "png",
+    "std",
+    "tonemapping_luts",
+    "x11",
+] }
+halo-domain = { path = "crates/halo-domain" }
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
