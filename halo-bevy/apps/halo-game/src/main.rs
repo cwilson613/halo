@@ -15,7 +15,13 @@ fn main() {
             }),
             ..default()
         }))
-        .add_systems(Startup, setup_pbr_fixture.after(project_scenario));
+        .add_systems(
+            Startup,
+            (setup_pbr_fixture, setup_editor_overlay)
+                .chain()
+                .after(project_scenario),
+        )
+        .add_systems(Update, (select_fixture, move_selection, update_inspector));
     app.run();
 }
 
@@ -24,6 +30,12 @@ struct AuthoredScenario(ScenarioDocument);
 
 #[derive(Resource, Default)]
 struct PendingDomainCommands(Vec<DomainCommand>);
+
+#[derive(Resource, Default, Debug, PartialEq)]
+struct EditorSelection(Option<ObjectId>);
+
+#[derive(Component)]
+struct InspectorText;
 
 #[derive(Resource, Debug, PartialEq)]
 struct SimulationState {
@@ -52,6 +64,7 @@ struct ScenarioProjection;
 fn configure_domain_runtime(app: &mut App) {
     app.insert_resource(AuthoredScenario(ScenarioDocument::fixture()))
         .init_resource::<PendingDomainCommands>()
+        .init_resource::<EditorSelection>()
         .init_resource::<SimulationState>()
         .insert_resource(Time::<Fixed>::from_hz(FIXED_HZ))
         .add_systems(Startup, project_scenario)
@@ -107,6 +120,92 @@ fn domain_transform(transform: halo_domain::Transform3) -> Transform {
 fn step_simulation(mut simulation: ResMut<SimulationState>, fixed_time: Res<Time<Fixed>>) {
     simulation.body.step(fixed_time.delta_secs_f64());
     simulation.steps += 1;
+}
+
+fn select_fixture(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    projected: Query<&AuthoredObjectId, With<ScenarioProjection>>,
+    mut selection: ResMut<EditorSelection>,
+) {
+    if keyboard.just_pressed(KeyCode::Tab) {
+        selection.0 = projected.iter().next().map(|id| id.0);
+    }
+}
+
+fn move_selection(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    selection: Res<EditorSelection>,
+    scenario: Res<AuthoredScenario>,
+    mut pending: ResMut<PendingDomainCommands>,
+) {
+    let Some(id) = selection.0 else {
+        return;
+    };
+    let Some(object) = scenario.0.objects.iter().find(|object| object.id == id) else {
+        return;
+    };
+
+    let mut delta = [0.0; 3];
+    for (key, axis, amount) in [
+        (KeyCode::ArrowLeft, 0, -0.1),
+        (KeyCode::ArrowRight, 0, 0.1),
+        (KeyCode::ArrowDown, 2, 0.1),
+        (KeyCode::ArrowUp, 2, -0.1),
+        (KeyCode::PageDown, 1, -0.1),
+        (KeyCode::PageUp, 1, 0.1),
+    ] {
+        if keyboard.just_pressed(key) {
+            delta[axis] += amount;
+        }
+    }
+    if delta == [0.0; 3] {
+        return;
+    }
+
+    let mut translation = object.transform.translation;
+    for axis in 0..3 {
+        translation[axis] += delta[axis];
+    }
+    pending
+        .0
+        .push(DomainCommand::MoveObject { id, translation });
+}
+
+fn setup_editor_overlay(mut commands: Commands) {
+    commands.spawn((
+        InspectorText,
+        Text::new("Tab: select  Arrow/Page: move"),
+        Node {
+            position_type: PositionType::Absolute,
+            left: px(16),
+            top: px(16),
+            ..default()
+        },
+    ));
+}
+
+fn update_inspector(
+    selection: Res<EditorSelection>,
+    scenario: Res<AuthoredScenario>,
+    mut inspector: Query<&mut Text, With<InspectorText>>,
+    mut gizmos: Gizmos,
+) {
+    let Ok(mut text) = inspector.single_mut() else {
+        return;
+    };
+    let Some(id) = selection.0 else {
+        text.0 = "Tab: select  Arrow/Page: move\nSelection: none".into();
+        return;
+    };
+    let Some(object) = scenario.0.objects.iter().find(|object| object.id == id) else {
+        return;
+    };
+    let translation = Vec3::from_array(object.transform.translation);
+    text.0 = format!(
+        "Tab: select  Arrow/Page: move\n{} [{}]\nposition: {:.1}, {:.1}, {:.1}",
+        object.name, id, translation.x, translation.y, translation.z
+    );
+    gizmos.axes(Transform::from_translation(translation), 1.5);
 }
 
 fn setup_pbr_fixture(
@@ -199,6 +298,41 @@ mod tests {
             .query_filtered::<(&AuthoredObjectId, &Transform), With<ScenarioProjection>>();
         let (_, transform) = query.single(app.world()).unwrap();
         assert_eq!(transform.translation, Vec3::new(4.0, 5.0, 6.0));
+    }
+
+    #[test]
+    fn editor_input_selects_and_moves_through_a_domain_command() {
+        let mut app = headless_app();
+        app.init_resource::<ButtonInput<KeyCode>>()
+            .add_systems(Update, (select_fixture, move_selection));
+        app.update();
+
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::Tab);
+        app.update();
+        assert_eq!(
+            app.world().resource::<EditorSelection>().0,
+            Some(ObjectId::from_u128(1))
+        );
+
+        {
+            let mut keyboard = app.world_mut().resource_mut::<ButtonInput<KeyCode>>();
+            keyboard.clear();
+            keyboard.press(KeyCode::ArrowRight);
+        }
+        app.update();
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .clear();
+        app.update();
+
+        assert_eq!(
+            app.world().resource::<AuthoredScenario>().0.objects[0]
+                .transform
+                .translation,
+            [0.1, 0.0, 0.0]
+        );
     }
 
     #[test]
