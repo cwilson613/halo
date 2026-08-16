@@ -1,10 +1,14 @@
 //! Bevy-independent authored document and deterministic simulation primitives.
 
+use serde::{Deserialize, Serialize};
+use std::fmt;
+
 /// Current native scenario schema version.
 pub const SCENARIO_SCHEMA_VERSION: u32 = 1;
 
 /// Stable authored identity. Runtime ECS entities are projections and never replace this value.
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
+#[serde(transparent)]
 pub struct ObjectId(u128);
 
 impl ObjectId {
@@ -18,7 +22,8 @@ impl ObjectId {
 }
 
 /// A minimal project-owned transform suitable for canonical documents.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Transform3 {
     pub translation: [f32; 3],
     pub rotation_xyzw: [f32; 4],
@@ -35,14 +40,16 @@ impl Default for Transform3 {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct ScenarioObject {
     pub id: ObjectId,
     pub name: String,
     pub transform: Transform3,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct ScenarioDocument {
     pub schema_version: u32,
     pub name: String,
@@ -62,9 +69,60 @@ impl ScenarioDocument {
         }
     }
 
+    /// Emit the canonical textual representation used by the Phase 0 spike.
+    ///
+    /// Struct field order and vector order are explicit parts of this schema. A trailing newline
+    /// makes the artifact friendly to ordinary text tooling and stable golden-file comparisons.
+    pub fn to_canonical_json(&self) -> Result<String, DocumentError> {
+        self.validate()?;
+        let mut output = serde_json::to_string_pretty(self)?;
+        output.push('\n');
+        Ok(output)
+    }
+
+    pub fn from_canonical_json(input: &str) -> Result<Self, DocumentError> {
+        let document: Self = serde_json::from_str(input)?;
+        document.validate()?;
+        Ok(document)
+    }
+
+    pub fn validate(&self) -> Result<(), DocumentError> {
+        if self.schema_version != SCENARIO_SCHEMA_VERSION {
+            return Err(DocumentError::UnsupportedSchemaVersion {
+                found: self.schema_version,
+                supported: SCENARIO_SCHEMA_VERSION,
+            });
+        }
+
+        for (index, object) in self.objects.iter().enumerate() {
+            if self.objects[..index]
+                .iter()
+                .any(|other| other.id == object.id)
+            {
+                return Err(DocumentError::DuplicateObjectId(object.id));
+            }
+
+            for value in object
+                .transform
+                .translation
+                .iter()
+                .chain(object.transform.rotation_xyzw.iter())
+                .chain(object.transform.scale.iter())
+            {
+                if !value.is_finite() {
+                    return Err(DocumentError::NonFiniteTransform(object.id));
+                }
+            }
+        }
+        Ok(())
+    }
+
     pub fn apply(&mut self, command: DomainCommand) -> Result<(), DomainError> {
         match command {
             DomainCommand::MoveObject { id, translation } => {
+                if !translation.iter().all(|component| component.is_finite()) {
+                    return Err(DomainError::NonFiniteTranslation(id));
+                }
                 let object = self
                     .objects
                     .iter_mut()
@@ -77,6 +135,39 @@ impl ScenarioDocument {
     }
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum DocumentError {
+    #[error("scenario JSON is invalid: {0}")]
+    Json(#[from] serde_json::Error),
+    #[error("unsupported scenario schema version {found}; this build supports {supported}")]
+    UnsupportedSchemaVersion { found: u32, supported: u32 },
+    #[error("scenario contains duplicate object ID {0}")]
+    DuplicateObjectId(ObjectId),
+    #[error("object {0} contains a non-finite transform component")]
+    NonFiniteTransform(ObjectId),
+}
+
+impl PartialEq for DocumentError {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (
+                Self::UnsupportedSchemaVersion {
+                    found: left_found,
+                    supported: left_supported,
+                },
+                Self::UnsupportedSchemaVersion {
+                    found: right_found,
+                    supported: right_supported,
+                },
+            ) => left_found == right_found && left_supported == right_supported,
+            (Self::DuplicateObjectId(left), Self::DuplicateObjectId(right)) => left == right,
+            (Self::NonFiniteTransform(left), Self::NonFiniteTransform(right)) => left == right,
+            (Self::Json(left), Self::Json(right)) => left.to_string() == right.to_string(),
+            _ => false,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum DomainCommand {
     MoveObject { id: ObjectId, translation: [f32; 3] },
@@ -85,6 +176,13 @@ pub enum DomainCommand {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum DomainError {
     ObjectNotFound(ObjectId),
+    NonFiniteTranslation(ObjectId),
+}
+
+impl fmt::Display for ObjectId {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(formatter, "{}", self.0)
+    }
 }
 
 /// Tiny deterministic state used to prove fixed-step traces without rendering.
@@ -112,6 +210,61 @@ pub fn fixed_step_trace(mut body: FixedStepBody, dt_seconds: f64, steps: usize) 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn canonical_json_is_stable_and_round_trips() {
+        let document = ScenarioDocument::fixture();
+        let first = document.to_canonical_json().unwrap();
+        let second = document.to_canonical_json().unwrap();
+
+        assert_eq!(first, second);
+        assert!(first.ends_with('\n'));
+        assert_eq!(
+            ScenarioDocument::from_canonical_json(&first).unwrap(),
+            document
+        );
+        assert_eq!(
+            first,
+            ScenarioDocument::from_canonical_json(&first)
+                .unwrap()
+                .to_canonical_json()
+                .unwrap()
+        );
+    }
+
+    #[test]
+    fn canonical_json_rejects_unknown_fields() {
+        let input = r#"{
+          "schema_version": 1,
+          "name": "fixture",
+          "objects": [],
+          "unexpected": true
+        }"#;
+        assert!(matches!(
+            ScenarioDocument::from_canonical_json(input),
+            Err(DocumentError::Json(_))
+        ));
+    }
+
+    #[test]
+    fn canonical_json_rejects_unsupported_versions_and_duplicate_ids() {
+        let mut document = ScenarioDocument::fixture();
+        document.schema_version = 2;
+        assert_eq!(
+            document.to_canonical_json(),
+            Err(DocumentError::UnsupportedSchemaVersion {
+                found: 2,
+                supported: 1,
+            })
+        );
+
+        let mut document = ScenarioDocument::fixture();
+        document.objects.push(document.objects[0].clone());
+        assert_eq!(
+            document.to_canonical_json(),
+            Err(DocumentError::DuplicateObjectId(ObjectId::from_u128(1)))
+        );
+    }
 
     #[test]
     fn domain_command_moves_stable_object() {
@@ -154,5 +307,21 @@ mod tests {
             }),
             Err(DomainError::ObjectNotFound(missing))
         );
+    }
+
+    #[test]
+    fn non_finite_command_is_rejected_without_mutating_document() {
+        let mut document = ScenarioDocument::fixture();
+        let before = document.clone();
+        let id = document.objects[0].id;
+
+        assert_eq!(
+            document.apply(DomainCommand::MoveObject {
+                id,
+                translation: [f32::NAN, 0.0, 0.0],
+            }),
+            Err(DomainError::NonFiniteTranslation(id))
+        );
+        assert_eq!(document, before);
     }
 }

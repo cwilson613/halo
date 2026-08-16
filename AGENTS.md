@@ -10,7 +10,8 @@ Build a clean-room Halo-inspired game, runtime, and artist-facing content toolch
 - Never commit Halo executables, maps, tags, textures, sounds, HEK packages, or unclear-rights derivatives.
 - Large and restricted resources belong under `HALO_RESOURCE_ROOT` (default `$HOME/.local/share/halo-re`).
 - Public tests and examples use project-authored redistributable fixtures.
-- Ringhopper and other GPL tooling remain in separate repositories/processes unless this repository's licensing is deliberately changed after review.
+- Ringhopper and other directly linked GPL tooling remain in separate repositories/processes unless this repository's licensing is deliberately changed after review.
+- Invader may be used as a pinned external legacy builder/reference through narrow process contracts; it is never a linked runtime/domain dependency or the canonical asset compiler.
 
 ## Architecture invariants
 
@@ -30,11 +31,16 @@ Build a clean-room Halo-inspired game, runtime, and artist-facing content toolch
 3. Phase 2: deterministic Blender/glTF interchange and asset processing.
 4. Phase 3: operator-supplied HEK Tutorial reference plus a redistributable public analogue.
 
+## Platform baseline
+
+The current Linux desktop spike targets Wayland; X11 is deliberately disabled. The flake also exposes a preliminary `aarch64-darwin` shell/package using Metal. Use `nix develop`; `flake.nix` owns the Rust toolchain and platform dependencies. Do not claim Darwin runtime validation from Linux-only flake evaluation.
+
 ## Quality gates
 
-For non-trivial changes, run:
+For non-trivial changes, run inside `nix develop`:
 
 ```bash
+nix flake check
 cargo fmt --all --check
 cargo test --workspace
 cargo clippy --workspace --all-targets --all-features -- -D warnings
