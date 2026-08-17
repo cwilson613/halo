@@ -13,6 +13,9 @@ src/typechecks.c
 *.exe
 *.pdb
 
+# Local Omegon workbench state and indexes.
+/.omegon/
+
 # Independent adjacent checkouts; intentionally not submodules.
 /omegon-halo-invader/
 /omegon-ringhopper/
